@@ -123,6 +123,7 @@ Most of the outputted script remains untouched as it covered all my use cases, o
 You can find the script and it's output in this repository at `data_quality_checker.py` and `data_quality_report.txt` respectively.
 
 ## 4. Communicate with Stakeholders
+See `email.txt` for email write-up.
 I'm assuming this is written for a product or business leader that is overseeing this project to set up a relational database and has sent me sample data to look into. In general I prefer emails to be clear to read, ideally as concise as possible, and provide a clear ask for the receiver to action on. I didn't want to just send an email with a bunch of questions, so I shelved data quality issues as action items for a different team (or my team potentially) and only briefly talked about how to optimize the data and account for performance and scaling concerns in production. Other things I could've mentioned in the email (but I figured is better for a planning meeting or in a PoC):
 * Checking what database we plan to use, columnar database may be a good choice as it's more efficient at analytical queries by only accessing the necessary columns.
 * Better proposed indexing, using composite indexing depending on what common queries will look like, and regular index maintenance would all be helpful.
