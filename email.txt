@@ -1,0 +1,26 @@
+Hi _____,
+
+I took a look at the sample data provided and have some clarifying questions before we migrate the data to a structured relational data model. I also wrote a script to check for data inconsistencies in the sample data and found some data quality issues. See below:
+
+General Questions:
+1. What teams plan to use this data and how? More specifically what types of queries or questions are we trying to answer using this relational database that our current database can't efficiently or effectively answer?
+2. Are there any data fields we need or do not need in this database? 
+3. What is the current size of the data? How much is the data growing each month/year?
+4. Will this database be accessed externally? What do we expect the read/write load to look like?
+
+Data Quality Issues:
+1. Users - There appears to have some binary data (lines 1 and 496), we want to make sure the entire users data is not binary encoded to properly ingest the data. The alternative is we can ignore these rows, but I would assume that is not a preferred approach.
+2. Users - There are duplicate user IDs in these files, thus it's likely the entire users data has some duplicate records as well that need to be cleaned up.
+3. Brand - There seem to be test brands present even in the sample data (ex. "name":"test brand @1599849713740", "brandCode":"TEST BRANDCODE @1599849713740"). Do we want/need test data or should this be filtered out for migration?
+4. Brand -  Some records have "category" or "categoryCode" values but not both. We can clean up these records by adding the other value.
+5. Receipt - There are some records where the number of purchased items (purchasedItemCount) does not match the count of items in the rewardsReceiptItemList in the same record, we should check if this is as intended or not.
+6. Receipt - There are some records where the total spend (totalSpent) value does not match the sum of the item prices in the rewardsReceiptItemList of the same record, we should check if this is as intended or not.
+7. Receipt - There are some data inconsistencies, for example purchaseDate is after dateScanned for some records. 
+8. I am also seeing some orphaned records (i.e. user IDs and brand IDs referenced in other files that we don't have a record for), but given this is sample data this might be okay as long as we validate that we do indeed have these records in our database. 
+
+Depending on the answers to the general questions I would have to adjust our database design accordingly. For example, currently I foresee receipt data to be the largest and fastest growing table, so we could partition (i.e. split the data into groups) that database table to optimize query speeds. We can also create and maintain aggregate tables or materialized views to precalculate common metrics, this would reduce load on the larger tables and also return much faster results. 
+
+Let me if you have any thoughts on anything above. If you don't know the answers to any of the general questions I can ask around and for the data quality issues I can submit tickets for the relevant team investigate and I can follow up with you on progress and resolution.
+
+Best,
+Ray
